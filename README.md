@@ -14,7 +14,7 @@ ULMFiT has been shown to be effective at improving the performance of NLP models
 - I used the latest DBpedia wiki datasets which includes the Long abstracts from Wikipedia articles
 - SFU Review Corpus - a collection of movie, book, and consumer product reviews 
 
-Model In Progress :)
+Model testing in progress as of 12/23/22 
 
 ## Usage
 Model Architectures 
