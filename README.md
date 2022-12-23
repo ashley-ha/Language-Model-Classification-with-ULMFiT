@@ -1,6 +1,6 @@
 # Super-Classification-with-ULMFiT
 
-Pytorch code implementation of the Universal Language Model Fine-tuning (ULMFiT), a powerful and efficient transfer learning method that can be applied to any task in NLP described in detail in the research paper [Universal Language Model Fine-tuning for Text Classification](chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://arxiv.org/pdf/1801.06146v5.pdf)
+Pytorch code implementation of the Universal Language Model Fine-tuning (ULMFiT), a powerful and efficient transfer learning method that can be applied to any task in NLP described in detail in the research paper [Universal Language Model Fine-tuning for Text Classification](https://arxiv.org/abs/1801.06146)
 
 ## About ULMFiT 
 Universal Language Model Fine-tuning (ULMFiT) is a technique for fine-tuning a pre-trained language model for a specific natural language processing (NLP) task. It was introduced by Jeremy Howard and Sebastian Ruder in a paper published in 2018.
