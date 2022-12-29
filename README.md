@@ -13,7 +13,7 @@ ULMFiT has been shown to be effective at improving the performance of NLP models
 #### Data
 - I used the latest DBpedia wiki datasets which includes the Long abstracts from Wikipedia articles
 - SFU Review Corpus - a collection of movie, book, and consumer product reviews 
-- SQuAD dataset - a reading comprehension dataset consisting of questiosn posed by crowdworkers on a set of Wiki articles, where the answer to every question is a segement of text, or span, from the corresponding reading passage 
+- [SQuAD dataset](https://rajpurkar.github.io/SQuAD-explorer/) - a reading comprehension dataset consisting of questiosn posed by crowdworkers on a set of Wiki articles, where the answer to every question is a segement of text, or span, from the corresponding reading passage 
 
 Model testing in progress as of 12/29/22 
 
