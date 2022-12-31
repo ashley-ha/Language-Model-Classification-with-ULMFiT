@@ -1,16 +1,19 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import pandas as pd
+import numpy as np 
+from sklearn.model_selection import train_test_split
 
-# import the necessary libraries for ULMFiT
-from fastai.text.data import TextLMDataBunch, TextClassificationDataBunch
-from fastai.text.learner import language_model_learner
+# import the necessary libraries for ULMFiT from fastai
+from fastai.text.all import * 
+from fastai.text.learner import *
 
 
-class AWD_LSTM():
-
+class AWD_LSTM(nn.Module):
     def __init__(self, vocab_sz: int, emb_sz: int, n_hid: int, n_layers: int, pad_token: int,
     hidden_p: float, input_p: float, embed_p:float, weight_p:float, qrnn:bool=False, bidir:bool=False):
+        super().__init__()
         self.vocab_sz = vocab_sz
         self.emb_sz = emb_sz
         self.n_hid = n_hid
@@ -23,30 +26,26 @@ class AWD_LSTM():
         self.qrnn = qrnn
         self.bidir = bidir
 
+        # Define the embedding layer
+        self.embedding = nn.Embedding(self.vocab_sz, self.emb_sz, self.pad_token)
 
-# define the path to the dataset
-path = 'path/to/dataset'
+        # Define the LSTM layer
+        self.lstm = nn.LSTM(self.emb_sz, self.n_hid, self.n_layers, batch_first=True, bidirectional=self.bidir)
 
-# create a TextLMDataBunch for the language modeling task
-data_lm = TextLMDataBunch.from_csv(path, csv_name='train.csv', valid_pct=0.2)
+        # Define the dropout layers
+        self.input_dp = nn.Dropout(self.input_p)
+        self.hidden_dp = nn.Dropout(self.hidden_p)
+        self.embed_dp = nn.Dropout(self.embed_p)
+        
+        # Define the fully-connected layer
+        self.fc = nn.Linear(self.n_hid, self.vocab_sz)
 
-# create a TextClassificationDataBunch for the classification task
-data_clas = TextClassificationDataBunch.from_csv(path, csv_name='train.csv', vocab=data_lm.train_ds.vocab, valid_pct=0.2)
+    def forward(self, x):
+        # Apply the embedding layer
+        x = self.embedding(x)
+        x = self.embed_dp(x)
+        
+        # Apply the LSTM layer
+        x, (hidden, cell) = self.lstm(x)
 
-# define the language model architecture (AWD_LSTM)
-lm_learner = language_model_learner(data_lm, AWD_LSTM, drop_mult=0.5)
 
-# train the language model
-lm_learner.fit_one_cycle(1, 1e-2)
-
-# save the encoder of the language model
-encoder = lm_learner.model[0]
-
-# define the classification model architecture (linear classifier)
-classifier = nn.Sequential(encoder, nn.Linear(encoder.n_hidden, len(data_clas.classes)))
-
-# create a ClassificationLearner using the classification model and the classification data
-clas_learner = ClassificationLearner(data_clas, classifier)
-
-# fine-tune the classification model using the classification data
-clas_learner.fit_one_cycle(1, 1e-2)
