@@ -4,15 +4,34 @@ import torch.optim as optim
 import pandas as pd
 import numpy as np 
 from sklearn.model_selection import train_test_split
+from transformers import BertModel 
+from torchtext.data import Field, TabularDataset, BucketIterator
+from transformers import BertModel, BertTokenizer
 
-# import the necessary libraries for ULMFiT from fastai
-from fastai.text.all import * 
-from fastai.text.learner import *
+# Define the fields for the dataset
+text_field = Field(tokenize='spacy', include_lengths=True)
+label_field = Field(sequential=False, use_vocab=False)
 
+# Load the dataset
+train_dataset, valid_dataset, test_dataset = TabularDataset.splits(
+    path='path/to/dataset',
+    train='train.tsv',
+    validation='valid.tsv',
+    test='test.tsv',
+    fields=[('text', text_field), ('label', label_field)],
+    skip_header=True
+)
 
-import torch
-import torch.nn as nn
-import torch.optim as optim
+# Build the vocabulary
+text_field.build_vocab(train_dataset, max_size=50000)
+
+# Define the dataloaders
+train_iterator, valid_iterator, test_iterator = BucketIterator.splits(
+    (train_dataset, valid_dataset, test_dataset),
+    batch_size=32,
+    sort_key=lambda x: len(x.text),
+    sort_within_batch=True,
+    device='cuda' if torch.cuda.is_available() else 'cpu')
 
 class ULMFiT(nn.Module):
     def __init__(self, pre_trained_model, num_classes):
@@ -57,17 +76,18 @@ def fine_tune_model(model, train_iterator, valid_iterator, criterion, optimizer,
         print(f'Epoch {epoch+1}: Train Loss: {train_loss:.3f}, Valid Loss: {valid_loss:.3f}')
 
 def main():
+
     # Load your pre-trained model
-    pre_trained_model = ...
+    pre_trained_model = BertModel.from_pretrained('bert-large-uncased-whole-word-masking')
     
     # Define the number of classes for your classification task
-    num_classes = ...
+    num_classes = 2
     
     # Create the ULMFiT model
     model = ULMFiT(pre_trained_model, num_classes)
     
     # Define your training and validation datasets and dataloaders
-    train_iterator, valid_iterator, test_iterator = ...
+    #train_iterator, valid_iterator, test_iterator = 
     
     # Define your loss function and optimizer
     criterion = nn.CrossEntropyLoss()
@@ -84,4 +104,11 @@ def main():
     test_loss = 0
     correct = 0
     for batch in test_iterator:
-        logits
+        logits = model(batch.text)
+        loss = criterion(logits, batch.label)
+        test_loss += loss.item()
+        correct += (torch.argmax(logits, dim=1) == batch.label).sum().item()
+    test_loss /= len(test_iterator)
+    accuracy = correct / len(test_iterator.dataset)
+    print(f'Test Loss: {test_loss:.3f}, Accuracy: {accuracy:.3f}')
+
