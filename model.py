@@ -10,42 +10,78 @@ from fastai.text.all import *
 from fastai.text.learner import *
 
 
-class AWD_LSTM(nn.Module):
-    def __init__(self, vocab_sz: int, emb_sz: int, n_hid: int, n_layers: int, pad_token: int,
-    hidden_p: float, input_p: float, embed_p:float, weight_p:float, qrnn:bool=False, bidir:bool=False):
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+class ULMFiT(nn.Module):
+    def __init__(self, pre_trained_model, num_classes):
         super().__init__()
-        self.vocab_sz = vocab_sz
-        self.emb_sz = emb_sz
-        self.n_hid = n_hid
-        self.n_layers = n_layers
-        self.pad_token = pad_token
-        self.hidden_p = hidden_p
-        self.input_p = input_p
-        self.embed_p = embed_p
-        self.weight_p = weight_p
-        self.qrnn = qrnn
-        self.bidir = bidir
-
-        # Define the embedding layer
-        self.embedding = nn.Embedding(self.vocab_sz, self.emb_sz, self.pad_token)
-
-        # Define the LSTM layer
-        self.lstm = nn.LSTM(self.emb_sz, self.n_hid, self.n_layers, batch_first=True, bidirectional=self.bidir)
-
-        # Define the dropout layers
-        self.input_dp = nn.Dropout(self.input_p)
-        self.hidden_dp = nn.Dropout(self.hidden_p)
-        self.embed_dp = nn.Dropout(self.embed_p)
+        self.pre_trained_model = pre_trained_model
+        self.num_classes = num_classes
+        self.fc = nn.Linear(pre_trained_model.hidden_size, num_classes)
+    
+    def forward(self, input_text):
+        # Pass input text through the pre-trained model to get hidden states
+        hidden_states = self.pre_trained_model(input_text)
         
-        # Define the fully-connected layer
-        self.fc = nn.Linear(self.n_hid, self.vocab_sz)
+        # Use the last hidden state as the input to the classifier
+        logits = self.fc(hidden_states[-1])
+        return logits
 
-    def forward(self, x):
-        # Apply the embedding layer
-        x = self.embedding(x)
-        x = self.embed_dp(x)
+def fine_tune_model(model, train_iterator, valid_iterator, criterion, optimizer, scheduler, num_epochs):
+    model.train()
+    
+    for epoch in range(num_epochs):
+        train_loss = 0
+        valid_loss = 0
         
-        # Apply the LSTM layer
-        x, (hidden, cell) = self.lstm(x)
+        # Set the learning rate for this epoch using the scheduler
+        scheduler.step()
+        
+        for batch in train_iterator:
+            optimizer.zero_grad()
+            logits = model(batch.text)
+            loss = criterion(logits, batch.label)
+            loss.backward()
+            optimizer.step()
+            train_loss += loss.item()
+        
+        for batch in valid_iterator:
+            logits = model(batch.text)
+            loss = criterion(logits, batch.label)
+            valid_loss += loss.item()
+        
+        train_loss /= len(train_iterator)
+        valid_loss /= len(valid_iterator)
+        print(f'Epoch {epoch+1}: Train Loss: {train_loss:.3f}, Valid Loss: {valid_loss:.3f}')
 
-
+def main():
+    # Load your pre-trained model
+    pre_trained_model = ...
+    
+    # Define the number of classes for your classification task
+    num_classes = ...
+    
+    # Create the ULMFiT model
+    model = ULMFiT(pre_trained_model, num_classes)
+    
+    # Define your training and validation datasets and dataloaders
+    train_iterator, valid_iterator, test_iterator = ...
+    
+    # Define your loss function and optimizer
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters())
+    
+    # Define a learning rate scheduler
+    scheduler = optim.lr_scheduler.SlantedTriangularLR(optimizer)
+    
+    # Fine-tune the model
+    fine_tune_model(model, train_iterator, valid_iterator, criterion, optimizer, scheduler, num_epochs=10)
+    
+    # Evaluate the model on the test set
+    model.eval()
+    test_loss = 0
+    correct = 0
+    for batch in test_iterator:
+        logits

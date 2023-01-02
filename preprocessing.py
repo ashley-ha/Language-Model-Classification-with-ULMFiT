@@ -1,6 +1,6 @@
 import json
 import pandas as pd
-from keras.preprocessing.text import Tokenizer
+from tokenizers import Tokenizer
 
 
 # Preprocessing steps before testing the model with AWD_LSTM class 
@@ -13,6 +13,7 @@ class Preprocessing:
         self.answers = answers
         self.questions_tokens = questions_tokens
         self.answers_tokens = answers_tokens
+        
 
     def tokenize_text(questions, answers):
         """
@@ -31,7 +32,7 @@ class Preprocessing:
             A tuple containing the tokenized questions and answers.
         """
         # Tokenize the questions and answers
-        tokenizer = Tokenizer()
+        tokenizer = Tokenizer(AWD_LSTM)
         questions_tokens = tokenizer.fit_on_texts(questions)
         answers_tokens = tokenizer.fit_on_texts(answers)
         
@@ -83,27 +84,4 @@ class Preprocessing:
         
         return questions_numerical, answers_numerical
 
-# define the path to the dataset
-full_path = 'YOURFULLPATHHERE'
-# reading the JSON data using json.load()
-file = 'train-v2.0.json'
-# Load the dataset from a json file
-with open(file, 'r') as f:
-    dataset = json.load(f)
 
-questions = []
-answers = []
-# Access the data in the dataset
-for example in dataset['data']:
-    # Each example consists of a context (the article text) and a list of questions and answers
-    context = example['paragraphs']
-    for paragraph in example['paragraphs']:
-        context = paragraph['context']
-        for qa in paragraph['qas']:
-            question = qa['question']
-            if qa['answers']:  # Check if the answers list is not empty
-                answer = qa['answers'][0]['text']  # There may be multiple answers, but we'll just use the first one
-            else:
-                answer = None
-            questions.append(question)
-            answers.append(answer)

@@ -1,12 +1,15 @@
-from sklearn.model_selection import train_test_split
-from preprocessing import *
+from model import AWD_LSTM
+from preprocessing import Preprocessing
 import json
 
+# define the path to the dataset
+full_path = 'YOURFULLPATHHERE'
 # reading the JSON data using json.load()
 file = 'train-v2.0.json'
 # Load the dataset from a json file
 with open(file, 'r') as f:
     dataset = json.load(f)
+
 
 questions = []
 answers = []
@@ -28,8 +31,8 @@ for example in dataset['data']:
 questions_tokens, answers_tokens = Preprocessing.tokenize_text(questions, answers)    
 
 #Create the vocabulary       
-questions_numerical = Preprocessing.create_vocab(questions_tokens, answers_tokens)
+vocab_size, word_index = Preprocessing.create_vocab(questions_tokens, answers_tokens)
 
-# Split the data into a training set and a testing set
-questions_train, questions_test, answers_train, answers_test = train_test_split(questions_numerical, answers_numerical, test_size=0.2)
+#Convert to numerical
+questions_numerical, answers_numerical = Preprocessing.convert_to_numerical(questions_tokens, answers_tokens)
 
