@@ -18,7 +18,14 @@ ULMFiT has been shown to be effective at improving the performance of NLP models
 - SFU Review Corpus - a collection of movie, book, and consumer product reviews 
 - [SQuAD dataset](https://rajpurkar.github.io/SQuAD-explorer/) - a reading comprehension dataset consisting of questiosn posed by crowdworkers on a set of Wiki articles, where the answer to every question is a segement of text, or span, from the corresponding reading passage 
 
-Model testing in progress as of 12/29/22 
+## My PyTorch Implementation 
+1. First, I needed to obtain a pre-trained language model. You can either use a pre-trained model provided by Hugging Face, or you can train your own language model on a large dataset such as Wikipedia, Yelp, etc. I chose a number of various dataset that you can see above.
+
+2. Next, I needed to fine-tune the pre-trained language model on my specific dataset. This involves using a smaller learning rate for the earlier layers of the model, and a larger learning rate for the later layers. This is known as discriminative learning rates.
+
+3. To further improve my model's performance, I used slanted triangular learning rates, which Jeremy and Sebastian go into detail on in their research paper. This involves gradually increasing the learning rate over the course of training, with a sharp decrease at the end.
+
+4. Finally, I used the fine-tuned language model as a feature extractor for your text classification task. Simply pass the input text through the model and use the resulting hidden states as features for a classification model.
 
 ## Usage
 Model Architectures 
