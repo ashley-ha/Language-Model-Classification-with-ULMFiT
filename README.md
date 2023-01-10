@@ -2,7 +2,7 @@
 
 Pytorch code implementation of the Universal Language Model Fine-tuning (ULMFiT), a powerful and efficient transfer learning method that can be applied to any task in NLP described in detail in the research paper [Universal Language Model Fine-tuning for Text Classification](https://arxiv.org/abs/1801.06146)
 
-## About ULMFiT 
+## About ULMFiT
 For a more comprehensive look at ULMFiT, check out my [Medium post](https://medium.com/p/fea0aed2cf96)
 
 ### Overview
