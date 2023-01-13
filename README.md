@@ -39,7 +39,7 @@ Loading in your data via path
 ```
 data_lm = TextLMDataBunch.from_csv(your_path, csv_name='your_csvname', valid_pct=0.2)
 ```
-
+This Repo is currently in progress
 # Contact 
 Feel free to reach out to me regarding issues, data, feedback (is welcome!) & requests relating to my code implementation:
 
