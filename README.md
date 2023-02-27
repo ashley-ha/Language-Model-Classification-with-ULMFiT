@@ -43,6 +43,30 @@ Next, I initialize the ULMFiT model by creating an instance of the TextSentiment
 
 I define the loss function and optimizer, move the model and loss function to the device (either GPU or CPU), and then train and evaluate the model for the specified number of epochs. During training, I save the model state whenever the validation loss improves
 
+``` Sample Model output:
+Epoch: 01 | Epoch Time: 0m 26s
+	Train Loss: 0.317 | Train Acc: 86.41%
+	 Val. Loss: 0.162 |  Val. Acc: 94.31%
+Epoch: 02 | Epoch Time: 0m 26s
+	Train Loss: 0.144 | Train Acc: 95.11%
+	 Val. Loss: 0.127 |  Val. Acc: 95.65%
+Epoch: 03 | Epoch Time: 0m 27s
+	Train Loss: 0.096 | Train Acc: 96.87%
+	 Val. Loss: 0.104 |  Val. Acc: 96.35%
+Epoch: 04 | Epoch Time: 0m 27s
+	Train Loss: 0.070 | Train Acc: 97.69%
+	 Val. Loss: 0.090 |  Val. Acc: 96.82%
+Epoch: 05 | Epoch Time: 0m 27s
+	Train Loss: 0.054 | Train Acc: 98.23%
+	 Val. Loss: 0.084 |  Val. Acc: 97.09%
+Test Loss: 0.080 | Test Acc: 97.23%
+Confusion Matrix:
+[[2265  105   40   90]
+ [  55 2379   27   39]
+ [  51   32 2372   45]
+ [  68   52   38 2342]] ```
+
+
 # Contact 
 Feel free to reach out to me regarding issues, data, feedback (is welcome!) & requests relating to my code implementation:
 
