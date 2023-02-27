@@ -91,7 +91,7 @@ def main():
     EMBED_DIM = 32
     HIDDEN_DIM = 64
     OUTPUT_DIM = 1
-    PAD_IDX =
+    PAD_IDX = TEXT.vocab.stoi[TEXT.pad_token]
 
     # Load data
     TEXT = torchtext.legacy.data.Field(tokenize='spacy', batch_first=True)
