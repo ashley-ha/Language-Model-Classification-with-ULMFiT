@@ -80,3 +80,62 @@ def binary_accuracy(preds, y):
     correct = (rounded_preds == y).float()
     acc = correct.sum() / len(correct)
     return acc
+
+def main():
+    BATCH_SIZE = 64
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    EPOCHS = 5
+    N_LAYERS = 3
+    BIDIRECTIONAL = True
+    DROPOUT = 0.5
+    EMBED_DIM = 32
+    HIDDEN_DIM = 64
+    OUTPUT_DIM = 1
+    PAD_IDX =
+
+    # Load data
+    TEXT = torchtext.legacy.data.Field(tokenize='spacy', batch_first=True)
+    LABEL = torchtext.legacy.data.LabelField(dtype=torch.float)
+    train_data, test_data = text_classification.DATASETS['AG_NEWS'](root='./data', ngrams=2, vocab=Vocab(min_freq=3))
+    train_data, val_data = train_data.split(split_ratio=0.7)
+
+    TEXT.build_vocab(train_data, max_size=25000, vectors="glove.6B.100d", unk_init=torch.Tensor.normal_)
+    LABEL.build_vocab(train_data)
+
+    train_iter, val_iter, test_iter = torchtext.legacy.data.BucketIterator.splits((train_data, val_data, test_data), batch_size=BATCH_SIZE, device=device)
+
+    # Initialize model
+    model = TextSentiment(len(TEXT.vocab), EMBED_DIM, HIDDEN_DIM, OUTPUT_DIM, N_LAYERS, BIDIRECTIONAL, DROPOUT)
+    pretrained_embeddings = TEXT.vocab.vectors
+    model.embedding.weight.data.copy_(pretrained_embeddings)
+
+    # Define loss and optimizer
+    criterion = nn.BCEWithLogitsLoss()
+    optimizer = optim.Adam(model.parameters())
+
+    model = model.to(device)
+    criterion = criterion.to(device)
+
+    # Train and evaluate model
+    best_val_loss = float('inf')
+    for epoch in range(EPOCHS):
+        start_time = time.time()
+        train_loss, train_acc = train(model, train_iter, optimizer, criterion, device)
+        val_loss, val_acc = evaluate(model, val_iter, criterion, device)
+        end_time = time.time()
+
+        epoch_mins, epoch_secs = divmod(end_time - start_time, 60)
+
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
+            torch.save(model.state_dict(), 'ag_news_model.pt')
+
+        print(f'Epoch: {epoch+1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
+        print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}%')
+        print(f'\t Val. Loss: {val_loss:.3f} |  Val. Acc: {val_acc*100:.2f}%')
+
+    # Test model
+    model.load_state_dict(torch.load('ag_news_model.pt'))
+    test_loss, test_acc = evaluate(model, test_iter, criterion, device)
+    print(f'Test Loss: {test_loss:.3f} | Test Acc: {test_acc*100:.2f}%')
+
