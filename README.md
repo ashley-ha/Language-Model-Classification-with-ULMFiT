@@ -14,9 +14,7 @@ ULMFiT has been shown to be effective at improving the performance of NLP models
 
 ## Differences for my specific use cases from the original research paper:
 ### Data
-- I used the latest DBpedia wiki datasets which includes the Long abstracts from Wikipedia articles
-- SFU Review Corpus - a collection of movie, book, and consumer product reviews 
-- [SQuAD dataset](https://rajpurkar.github.io/SQuAD-explorer/) - a reading comprehension dataset consisting of questiosn posed by crowdworkers on a set of Wiki articles, where the answer to every question is a segement of text, or span, from the corresponding reading passage 
+- I used the latest AG News dataset
 
 ## My PyTorch Implementation 
 1. First, I needed to obtain a pre-trained language model. You can either use a pre-trained model provided by Hugging Face, or you can train your own language model on a large dataset such as Wikipedia, Yelp, etc. I chose a number of various datasets that you can see above.
@@ -39,7 +37,12 @@ Loading in your data via path
 ```
 data_lm = TextLMDataBunch.from_csv(your_path, csv_name='your_csvname', valid_pct=0.2)
 ```
-This Repo is currently in progress ! Last updated 1/10/23
+In the main() function, I first load the AG News dataset and split it into training, validation, and test sets using the text_classification module of TorchText. I then built the vocabulary for the TEXT field and the label for the LABEL field. I used the BucketIterator class to create data iterators for the three sets, which I used in training, validation, and testing.
+
+Next, I initialize the ULMFiT model by creating an instance of the TextSentiment class and setting its attributes based on the hyperparameters defined at the beginning of the function. I also load the pre-trained GloVe embeddings for the vocabulary and set them as the initial weights for the embedding layer of the model.
+
+I define the loss function and optimizer, move the model and loss function to the device (either GPU or CPU), and then train and evaluate the model for the specified number of epochs. During training, I save the model state whenever the validation loss improves
+
 # Contact 
 Feel free to reach out to me regarding issues, data, feedback (is welcome!) & requests relating to my code implementation:
 
