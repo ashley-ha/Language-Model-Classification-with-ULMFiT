@@ -1,4 +1,5 @@
-import torch
+# Import Libraries
+import torch 
 import torch.nn as nn
 import torch.optim as optim
 import torchtext
@@ -93,7 +94,7 @@ def main():
     OUTPUT_DIM = 1
     PAD_IDX = TEXT.vocab.stoi[TEXT.pad_token]
 
-    # Load data
+    # Load in data
     TEXT = torchtext.legacy.data.Field(tokenize='spacy', batch_first=True)
     LABEL = torchtext.legacy.data.LabelField(dtype=torch.float)
     train_data, test_data = text_classification.DATASETS['AG_NEWS'](root='./data', ngrams=2, vocab=Vocab(min_freq=3))
@@ -104,12 +105,12 @@ def main():
 
     train_iter, val_iter, test_iter = torchtext.legacy.data.BucketIterator.splits((train_data, val_data, test_data), batch_size=BATCH_SIZE, device=device)
 
-    # Initialize model
+    # Initialize the model
     model = TextSentiment(len(TEXT.vocab), EMBED_DIM, HIDDEN_DIM, OUTPUT_DIM, N_LAYERS, BIDIRECTIONAL, DROPOUT)
     pretrained_embeddings = TEXT.vocab.vectors
     model.embedding.weight.data.copy_(pretrained_embeddings)
 
-    # Define loss and optimizer
+    # Define the loss and optimizer functions
     criterion = nn.BCEWithLogitsLoss()
     optimizer = optim.Adam(model.parameters())
 
@@ -134,7 +135,7 @@ def main():
         print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}%')
         print(f'\t Val. Loss: {val_loss:.3f} |  Val. Acc: {val_acc*100:.2f}%')
 
-    # Test model
+    # Testing the model
     model.load_state_dict(torch.load('ag_news_model.pt'))
     test_loss, test_acc = evaluate(model, test_iter, criterion, device)
     print(f'Test Loss: {test_loss:.3f} | Test Acc: {test_acc*100:.2f}%')
