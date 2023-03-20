@@ -27,7 +27,7 @@ for example in dataset['data']:
                 answer = None
             questions.append(question)
             answers.append(answer)
-#Tokenize the text
+#Tokenize the text question and answers
 questions_tokens, answers_tokens = Preprocessing.tokenize_text(questions, answers)    
 
 #Create the vocabulary       
