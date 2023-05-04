@@ -117,7 +117,7 @@ def main():
     model = model.to(device)
     criterion = criterion.to(device)
 
-    # Train and evaluate model
+    # Train & evaluate model
     best_val_loss = float('inf')
     for epoch in range(EPOCHS):
         start_time = time.time()
@@ -135,6 +135,15 @@ def main():
         print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}%')
         print(f'\t Val. Loss: {val_loss:.3f} |  Val. Acc: {val_acc*100:.2f}%')
 
+    def accuracy(predictions, labels):
+        _, preds = torch.max(predictions, dim=1)
+        return torch.tensor(torch.sum(preds == labels).item() / len(preds))
+
+    # During training and validation loops:
+#     with torch.no_grad():
+#         acc = accuracy(predictions, labels)
+#         print(f"Accuracy: {acc:.2f}")
+    
     def categorical_accuracy(preds, y):
         _, predicted = torch.max(preds, 1)
         correct = (predicted == y).float()
