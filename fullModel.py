@@ -135,6 +135,12 @@ def main():
         print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}%')
         print(f'\t Val. Loss: {val_loss:.3f} |  Val. Acc: {val_acc*100:.2f}%')
 
+    def categorical_accuracy(preds, y):
+        _, predicted = torch.max(preds, 1)
+        correct = (predicted == y).float()
+        acc = correct.sum() / len(correct)
+        return acc
+    
     # Testing the model
     model.load_state_dict(torch.load('ag_news_model.pt'))
     test_loss, test_acc = evaluate(model, test_iter, criterion, device)
