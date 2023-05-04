@@ -2,13 +2,13 @@ from fastai.text import *
 import os
 
 def pretrain_language_model(data_dir, lm_dir, bs=48, epochs=1):
-    # Load in our text data:
+    #Load in our text data:
     data_lm = TextLMDataBunch.from_folder(data_dir, bs=bs)
 
-    # Initialize the AWD-LSTM language model
+    # Initialize the AWD-LSTM lm
     learn = language_model_learner(data_lm, AWD_LSTM, drop_mult=0.5)
 
-    # Pretraining our language model
+    #Pretrain language model
     learn.fit_one_cycle(epochs, 1e-2)
 
     # Save the pre-trained language model
