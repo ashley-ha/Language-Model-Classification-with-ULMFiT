@@ -93,7 +93,8 @@ def main():
     HIDDEN_DIM = 64
     # AG News has 4 class so use output dim = 4 (change this depending on the # of your classes)
     OUTPUT_DIM = 4
-    PAD_IDX = TEXT.vocab.stoi[TEXT.pad_token]
+    #PAD_IDX is unused
+    # PAD_IDX = TEXT.vocab.stoi[TEXT.pad_token]
 
     # Load in data
     TEXT = torchtext.legacy.data.Field(tokenize='spacy', batch_first=True)
