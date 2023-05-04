@@ -91,7 +91,8 @@ def main():
     DROPOUT = 0.5
     EMBED_DIM = 32
     HIDDEN_DIM = 64
-    OUTPUT_DIM = 1
+    # AG News has 4 class so use output dim = 4 (change this depending on the # of your classes)
+    OUTPUT_DIM = 4
     PAD_IDX = TEXT.vocab.stoi[TEXT.pad_token]
 
     # Load in data
