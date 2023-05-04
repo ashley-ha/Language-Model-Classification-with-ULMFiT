@@ -1,6 +1,6 @@
 # Language Model Implementation with ULMFiT
 
-This repository contains a PyTorch implementation of Universal Language Model Fine-tuning (ULMFiT), a powerful and efficient transfer learning method that can be applied to various tasks in NLP. The method is described in detail in the research paper Universal Language Model Fine-tuning for Text Classification.
+This repository contains a PyTorch implementation of Universal Language Model Fine-tuning (ULMFiT), a powerful and efficient transfer learning method that can be applied to various tasks in NLP. The method is described in detail in the research paper Universal Language Model Fine-tuning for Text Classification. https://arxiv.org/abs/1801.06146
 
 About ULMFiT
 For a more comprehensive look at ULMFiT, check out my Medium post: https://medium.com/@ashleyha/lets-learn-about-universal-language-model-fine-tuning-ulmfit-through-practical-applications-fea0aed2cf96.
