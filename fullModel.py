@@ -15,7 +15,7 @@ class TextSentiment(nn.Module):
     def __init__(self, vocab_size, embed_dim, hidden_dim, output_dim, n_layers, bidirectional, dropout):
         super().__init__()
 
-        self.embedding = nn.EmbeddingBag(vocab_size, embed_dim, sparse=True)
+        self.embedding = nn.Embedding(vocab_size, embed_dim, sparse=True)
         self.encoder = nn.LSTM(embed_dim, hidden_dim, num_layers=n_layers, bidirectional=bidirectional, batch_first=True, dropout=dropout)
         self.fc = nn.Linear(hidden_dim * 2 if bidirectional else hidden_dim, output_dim)
         self.dropout = nn.Dropout(dropout)
