@@ -1,3 +1,6 @@
+ # Note that the fine-tuning & training steps are using only 1 epoch each for demonstration purposes here, 
+ # The number of epochs should be adjusted based on the requirements & available computational resources.
+
 from fastai.text import *
 import os
 
