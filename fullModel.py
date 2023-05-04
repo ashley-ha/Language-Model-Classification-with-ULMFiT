@@ -47,7 +47,7 @@ def train(model, iterator, optimizer, criterion, device):
         text, offsets, label = batch
         text, offsets, label = text.to(device), offsets.to(device), label.to(device)
         optimizer.zero_grad()
-        predictions = model(text, offsets)
+        predictions = model(text)
         loss = criterion(predictions, label)
         acc = binary_accuracy(predictions, label)
         loss.backward()
@@ -67,7 +67,7 @@ def evaluate(model, iterator, criterion, device):
         for batch in tqdm(iterator):
             text, offsets, label = batch
             text, offsets, label = text.to(device), offsets.to(device), label.to(device)
-            predictions = model(text, offsets)
+            predictions = model(text)
             loss = criterion(predictions, label)
             acc = binary_accuracy(predictions, label)
             epoch_loss += loss.item()
