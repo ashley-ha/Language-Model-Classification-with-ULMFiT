@@ -72,4 +72,4 @@ This implementation demonstrates how to apply ULMFiT to a text classification ta
 # Contact 
 Feel free to reach out to me regarding issues, data, feedback (is welcome!) & requests relating to my code implementation:
 
-Ashley Ha - ashleyha@berkeley.edu | https://medium.com/@ashleyha | https://www.linkedin.com/in/ashleyeastman/
+Ashley Ha - ashleyha@berkeley.edu | https://medium.com/@ashleyha | https://www.linkedin.com/in/ashleyeastman/ | https://ashleyha.substack.com/
