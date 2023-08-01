@@ -5,6 +5,7 @@ This repository contains a PyTorch implementation of Universal Language Model Fi
 About ULMFiT
 For a more comprehensive look at ULMFiT, check out my Medium post: https://medium.com/@ashleyha/lets-learn-about-universal-language-model-fine-tuning-ulmfit-through-practical-applications-fea0aed2cf96.
 
+
 Overview
 Universal Language Model Fine-tuning (ULMFiT) is a technique for fine-tuning a pre-trained language model for a specific natural language processing (NLP) task. It was introduced by Jeremy Howard and Sebastian Ruder in a paper published in 2018.
 
